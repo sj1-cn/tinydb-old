@@ -1,8 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>cn.sj1</groupId>
-  <artifactId>tiny-db</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.sj1</groupId>
+	<artifactId>tiny-db</artifactId>
+	<name>tiny-db</name>
+	<description>tiny-db</description>
+	<version>0.0.1-SNAPSHOT</version>
+	<inceptionYear>2020</inceptionYear>
+	<url>http://www.snakeyaml.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.scm.id>bitbucket</project.scm.id>
@@ -26,14 +32,10 @@
 		<tinyasm.version>${project.version}</tinyasm.version>
 		<junit.version>5.7.1</junit.version>
 	</properties>
-	<name>tinyasm-core</name>
-	<description>tinyasm-core</description>
-	<inceptionYear>2020</inceptionYear>
-	<url>http://www.snakeyaml.org</url>
 	<scm>
-		<connection>scm:git:https://github.com/sj1-cn/tinyasm-core.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:sj1-cn/tinyasm-core.git</developerConnection>
-		<url>https://github.com/sj1-cn/tinyasm-core/tree/master/src</url>
+		<connection>scm:git:https://github.com/sj1-cn/tiny-db.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:sj1-cn/tiny-db.git</developerConnection>
+		<url>https://github.com/sj1-cn/tiny-db/tree/master/src</url>
 		<tag>${tinyasm.version}</tag>
 	</scm>
 	<licenses>
@@ -58,7 +60,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		
+
 		<!-- test -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -91,7 +93,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
