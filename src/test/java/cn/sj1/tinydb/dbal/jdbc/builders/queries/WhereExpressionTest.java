@@ -18,7 +18,7 @@ public class WhereExpressionTest {
             "u.username = ?",
             Operator.AND
         );
-        assertEquals("AND u.username = ?", where.toSQL());
+        assertEquals("AND u.username = ?", where.toDemoSQL());
     }
 
     @Test
@@ -27,12 +27,12 @@ public class WhereExpressionTest {
             "u.password = ?",
             Operator.OR
         );
-        assertEquals("OR u.password = ?", where.toSQL());
+        assertEquals("OR u.password = ?", where.toDemoSQL());
     }
 
     @Test
     public void it_ignores_boolean_operator_from_first_expression() {
         WhereExpression where = WhereExpression.with("u.name LIKE ?", null);
-        assertEquals("u.name LIKE ?", where.toSQL());
+        assertEquals("u.name LIKE ?", where.toDemoSQL());
     }
 }

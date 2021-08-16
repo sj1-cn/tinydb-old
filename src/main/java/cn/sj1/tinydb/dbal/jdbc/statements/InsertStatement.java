@@ -30,7 +30,7 @@ public class InsertStatement<T> extends SQLStatement {
 
     public Hydrator<T> execute(Object... parameters) {
         try (PreparedStatement statement = connection.prepareStatement(
-            insert.toSQL(),
+            insert.toDemoSQL(),
             Statement.RETURN_GENERATED_KEYS
         )) {
             QueryParameters.bind(statement, parameters);

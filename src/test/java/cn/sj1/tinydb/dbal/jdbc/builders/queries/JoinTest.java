@@ -15,7 +15,7 @@ public class JoinTest {
     @Test
     public void it_converts_to_sql_a_single_inner_join_statement() {
         join.inner("roles r", "r.id = u.role_id");
-        assertEquals("INNER JOIN roles r ON r.id = u.role_id", join.toSQL());
+        assertEquals("INNER JOIN roles r ON r.id = u.role_id", join.toDemoSQL());
     }
 
     @Test
@@ -26,14 +26,14 @@ public class JoinTest {
         ;
         assertEquals(
             "INNER JOIN user_roles ur ON ur.user_id = u.id INNER JOIN roles r ON r.id = ur.role_id",
-            join.toSQL()
+            join.toDemoSQL()
         );
     }
 
     @Test
     public void it_converts_to_sql_a_single_outer_join_statement() {
         join.outer("roles r", "r.id = u.role_id");
-        assertEquals("OUTER JOIN roles r ON r.id = u.role_id", join.toSQL());
+        assertEquals("OUTER JOIN roles r ON r.id = u.role_id", join.toDemoSQL());
     }
 
     @Test
@@ -44,7 +44,7 @@ public class JoinTest {
         ;
         assertEquals(
             "OUTER JOIN user_roles ur ON ur.user_id = u.id OUTER JOIN roles r ON r.id = ur.role_id",
-            join.toSQL()
+            join.toDemoSQL()
         );
     }
 }

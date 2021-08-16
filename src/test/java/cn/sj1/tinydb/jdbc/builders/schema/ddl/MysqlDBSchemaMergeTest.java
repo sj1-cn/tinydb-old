@@ -34,7 +34,7 @@ import cn.sj1.tinydb.jdbc.builders.schema.ColumnList;
 import cn.sj1.tinydb.jdbc.builders.schema.JDBC;
 import cn.sj1.tinydb.jdbc.builders.schema.db.JdbcDababaseMetadata;
 
-public class H2DBSchemaMergeTest extends TestBase {
+public class MysqlDBSchemaMergeTest extends TestBase {
 
 	String tableName = "usercomplex".toLowerCase();
 	DBSchemaMerge dbSchemaMerge;
@@ -48,12 +48,10 @@ public class H2DBSchemaMergeTest extends TestBase {
 
 		HikariConfig config = new HikariConfig();
 
-		config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
-		config.setConnectionTestQuery("VALUES 1");
-		config.addDataSourceProperty("URL", // jdbc:h2:mem:test
-				"jdbc:h2:mem:" + testInfo.getTestMethod().get().getName() + ";DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MSSQLServer");
-		config.addDataSourceProperty("user", "sa");
-		config.addDataSourceProperty("password", "sa");
+		String name = "tinydbtest";
+		config.setJdbcUrl("jdbc:mysql://localhost/" + name);
+		config.addDataSourceProperty("user", "root");
+		config.addDataSourceProperty("password", "MySQL@20210721");
 
 		dataSource = new HikariDataSource(config);
 		conn = dataSource.getConnection();
@@ -146,7 +144,7 @@ public class H2DBSchemaMergeTest extends TestBase {
 		Statement statement = mock(Statement.class);
 
 		dbSchemaMerge.prepareMerge(statement, tableName, addColumn);
-		verify(statement).addBatch("ALTER TABLE usercomplex ALTER COLUMN name VARCHAR(256)");
+		verify(statement).addBatch("ALTER TABLE usercomplex MODIFY name VARCHAR(256)");
 	}
 
 	@Test

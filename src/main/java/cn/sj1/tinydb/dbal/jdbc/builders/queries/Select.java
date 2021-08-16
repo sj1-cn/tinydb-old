@@ -204,15 +204,15 @@ public class Select implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		return String
 			.format("SELECT %s FROM %s %s %s %s %s",
-			parts.get("columns").toSQL(),
-			parts.get("from").toSQL(),
-			parts.get("join").toSQL(),
-			parts.get("where").toSQL(),
-			parts.get("orderby").toSQL(),
-			parts.get("rows").toSQL()
+			parts.get("columns").toDemoSQL(),
+			parts.get("from").toDemoSQL(),
+			parts.get("join").toDemoSQL(),
+			parts.get("where").toDemoSQL(),
+			parts.get("orderby").toDemoSQL(),
+			parts.get("rows").toDemoSQL()
 		).trim().replaceAll("( )+", " ");
 	}
 }

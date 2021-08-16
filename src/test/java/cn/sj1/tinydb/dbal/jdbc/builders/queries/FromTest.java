@@ -15,7 +15,7 @@ public class FromTest {
 	public void it_converts_to_sql_a_table_without_alias() {
 		from = From.empty().table("users");
 
-		assertEquals("users", from.toSQL());
+		assertEquals("users", from.toDemoSQL());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class FromTest {
 	public void it_converts_to_sql_a_table_with_an_alias() {
 		from = From.empty().tableWithAlias("users", "u");
 
-		assertEquals("users u", from.toSQL());
+		assertEquals("users u", from.toDemoSQL());
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class FromTest {
 
 		from.addAlias("u");
 
-		assertEquals("users u", from.toSQL());
+		assertEquals("users u", from.toDemoSQL());
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class FromTest {
 
 		copy.addAlias("p");
 
-		assertEquals("users u", from.toSQL());
-		assertEquals("users p", copy.toSQL());
+		assertEquals("users u", from.toDemoSQL());
+		assertEquals("users p", copy.toDemoSQL());
 	}
 }

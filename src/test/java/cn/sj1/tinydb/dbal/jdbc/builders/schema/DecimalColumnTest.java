@@ -17,33 +17,33 @@ public class DecimalColumnTest {
 
 	@Test
 	public void it_converts_to_sql_an_integer_column() {
-		assertEquals("currency DECIMAL(15,6)", DECIMAL("currency").toSQL());
+		assertEquals("currency DECIMAL(15,6)", DECIMAL("currency").toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_required_integer_column() {
-		assertEquals("currency DECIMAL(15,6) NOT NULL", DECIMAL("currency").required().toSQL());
+		assertEquals("currency DECIMAL(15,6) NOT NULL", DECIMAL("currency").required().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_an_unsigned_integer_column() {
-		assertEquals("currency DECIMAL(10,6)", DECIMAL("currency").size(10).toSQL());
+		assertEquals("currency DECIMAL(10,6)", DECIMAL("currency").size(10).toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_unsigned_autoincrementing_integer_column() {
-		assertEquals("currency DECIMAL(10,6) NOT NULL", DECIMAL("currency").size(10).required().toSQL());
+		assertEquals("currency DECIMAL(10,6) NOT NULL", DECIMAL("currency").size(10).required().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_unsigned_integer_column_with_a_default() {
 		assertEquals("currency DECIMAL(10,6) NOT NULL DEFAULT '1'",
-				DECIMAL("currency").size(10).required().defaultValue("1").toSQL());
+				DECIMAL("currency").size(10).required().defaultValue("1").toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_unsigned_integer_column_with_a_default_scale() {
 		assertEquals("currency DECIMAL(10,3) NOT NULL DEFAULT '1'",
-				DECIMAL("currency").size(10).digits(3).required().defaultValue("1").toSQL());
+				DECIMAL("currency").size(10).digits(3).required().defaultValue("1").toDemoSQL());
 	}
 }

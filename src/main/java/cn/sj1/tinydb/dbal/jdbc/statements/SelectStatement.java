@@ -87,7 +87,7 @@ public class SelectStatement<T> extends SQLStatement {
 
     public Hydrator<T> execute(Object... parameters) {
         try (PreparedStatement statement = connection.prepareStatement(
-            select.toSQL()
+            select.toDemoSQL()
         )) {
             QueryParameters.bind(statement, parameters);
 

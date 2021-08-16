@@ -47,13 +47,13 @@ public class Update implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		assertNonEmptyColumns();
         return String.format(
             "UPDATE %s SET %s %s",
             table,
             columnsToSQL(),
-            where.toSQL()
+            where.toDemoSQL()
         ).trim();
 	}
 

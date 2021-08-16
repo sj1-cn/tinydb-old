@@ -21,14 +21,14 @@ public class RowsTest {
 
     @Test
     public void it_converts_to_sql_an_object_with_no_offset_and_limit() {
-        assertEquals("", rows.toSQL());
+        assertEquals("", rows.toDemoSQL());
     }
 
     @Test
     public void it_converts_to_sql_an_object_with_5_rows_as_limit() {
         rows.countTo(5);
 
-        assertEquals("LIMIT 5", rows.toSQL());
+        assertEquals("LIMIT 5", rows.toDemoSQL());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class RowsTest {
         rows.countTo(10);
         rows.startingAt(30);
 
-        assertEquals("LIMIT 10 OFFSET 30", rows.toSQL());
+        assertEquals("LIMIT 10 OFFSET 30", rows.toDemoSQL());
     }
 
     @Test

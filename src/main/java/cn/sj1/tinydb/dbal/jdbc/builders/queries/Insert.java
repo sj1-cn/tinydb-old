@@ -29,7 +29,7 @@ public class Insert implements HasSQLRepresentation {
         return this;
     }
 
-    public String toSQL() {
+    public String toDemoSQL() {
         assertValuesArePresent();
         assertColumnsAndValuesMatch();
         return String.format(
@@ -55,7 +55,7 @@ public class Insert implements HasSQLRepresentation {
     private String columnsToString() {
         if (columns.size() == 0) return "";
 
-        return "(" + columns.toSQL() + ")";
+        return "(" + columns.toDemoSQL() + ")";
     }
 
     private String valuesToString() {

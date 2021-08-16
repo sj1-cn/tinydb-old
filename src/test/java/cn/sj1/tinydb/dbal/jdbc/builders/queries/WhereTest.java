@@ -15,25 +15,25 @@ public class WhereTest {
     @Test
     public void it_converts_to_sql_a_single_and_where_expression() {
         where.and("username = ?");
-        assertEquals("WHERE username = ?", where.toSQL());
+        assertEquals("WHERE username = ?", where.toDemoSQL());
     }
 
     @Test
     public void it_converts_to_sql_a_single_or_where_expression() {
         where.or("username = ?");
-        assertEquals("WHERE username = ?", where.toSQL());
+        assertEquals("WHERE username = ?", where.toDemoSQL());
     }
 
     @Test
     public void it_converts_to_sql_a_single_and_where_in_expression() {
         where.and("username", 3);
-        assertEquals("WHERE username IN (?, ?, ?)", where.toSQL());
+        assertEquals("WHERE username IN (?, ?, ?)", where.toDemoSQL());
     }
 
     @Test
     public void it_converts_to_sql_a_single_or_where_in_expression() {
         where.and("username", 3);
-        assertEquals("WHERE username IN (?, ?, ?)", where.toSQL());
+        assertEquals("WHERE username IN (?, ?, ?)", where.toDemoSQL());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class WhereTest {
         where.and("username = ?").and("password = ?").and("name LIKE ?");
         assertEquals(
             "WHERE username = ? AND password = ? AND name LIKE ?",
-            where.toSQL()
+            where.toDemoSQL()
         );
     }
 
@@ -50,7 +50,7 @@ public class WhereTest {
         where.or("username = ?").or("password = ?").or("name LIKE ?");
         assertEquals(
             "WHERE username = ? OR password = ? OR name LIKE ?",
-            where.toSQL()
+            where.toDemoSQL()
         );
     }
 
@@ -59,7 +59,7 @@ public class WhereTest {
         where.and("username = ?").or("password = ?").and("name IN (?, ?, ?)");
         assertEquals(
             "WHERE username = ? OR password = ? AND name IN (?, ?, ?)",
-            where.toSQL()
+            where.toDemoSQL()
         );
     }
 }

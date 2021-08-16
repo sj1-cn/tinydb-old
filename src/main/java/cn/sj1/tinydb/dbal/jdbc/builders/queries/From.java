@@ -53,7 +53,7 @@ class From implements HasSQLRepresentation {
         return alias;
     }
 
-    public String toSQL() {
+    public String toDemoSQL() {
         return table + ((alias == null) ? "" : " " + alias);
     }
 }

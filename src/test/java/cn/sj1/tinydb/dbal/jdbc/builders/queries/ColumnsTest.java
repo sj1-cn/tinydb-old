@@ -11,7 +11,7 @@ public class ColumnsTest {
 	@Test
 	public void it_converts_to_sql_a_single_column() {
 		columns.add("username");
-		assertEquals("username", columns.toSQL());
+		assertEquals("username", columns.toDemoSQL());
 	}
 
 //	@SuppressWarnings("deprecation")
@@ -24,14 +24,14 @@ public class ColumnsTest {
 	public void it_converts_to_sql_several_columns() {
 		columns.add("username", "password", "email");
 
-		assertEquals("username, password, email", columns.toSQL());
+		assertEquals("username, password, email", columns.toDemoSQL());
 	}
 
 	@Test
 	public void it_replaces_existing_columns() {
 		columns.add("username", "password").clear().add("password", "email");
 
-		assertEquals("password, email", columns.toSQL());
+		assertEquals("password, email", columns.toDemoSQL());
 	}
 
 //	@SuppressWarnings("deprecation")

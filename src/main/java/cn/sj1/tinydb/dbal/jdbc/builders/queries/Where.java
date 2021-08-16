@@ -60,7 +60,7 @@ class Where implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		if (isEmpty()) return "";
 
 		return String.format("WHERE %s", appendExpressions());
@@ -69,7 +69,7 @@ class Where implements HasSQLRepresentation {
 	private String appendExpressions() {
 		StringBuilder where = new StringBuilder();
         expressions
-            .forEach(expression -> where.append(expression.toSQL()).append(" "))
+            .forEach(expression -> where.append(expression.toDemoSQL()).append(" "))
         ;
 		return where.toString().replaceAll(" $", "");
 	}

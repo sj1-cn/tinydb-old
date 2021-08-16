@@ -18,13 +18,13 @@ public class UpdateTest {
 	@Test
 	public void it_converts_to_sql_an_update_without_a_where() {
 		update.columns("username");
-		assertEquals("UPDATE users SET username = ?", update.toSQL());
+		assertEquals("UPDATE users SET username = ?", update.toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_an_update_with_a_where() {
 		update.columns("username").where("user_id = ?");
-		assertEquals("UPDATE users SET username = ? WHERE user_id = ?", update.toSQL());
+		assertEquals("UPDATE users SET username = ? WHERE user_id = ?", update.toDemoSQL());
 	}
 
 	@Test
@@ -36,19 +36,19 @@ public class UpdateTest {
 		update = Update.table("user")
 			.columns(ColumnList.namesOf(columnList.others()))
 			.where(ColumnList.namesOf(columnList.primaryKeys()));
-		assertEquals("UPDATE user SET name = ?, description = ? WHERE id = ?", update.toSQL());
+		assertEquals("UPDATE user SET name = ?, description = ? WHERE id = ?", update.toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_an_update_with_several_where_clauses() {
 		update.columns("username").where("user_id = ?").orWhere("created_at > ?").where("name LIKE ?");
 		assertEquals("UPDATE users SET username = ? WHERE user_id = ? OR created_at > ? AND name LIKE ?",
-				update.toSQL());
+				update.toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_an_update_with_several_columns_without_a_where() {
 		update.columns("username", "password", "role");
-		assertEquals("UPDATE users SET username = ?, password = ?, role = ?", update.toSQL());
+		assertEquals("UPDATE users SET username = ?, password = ?, role = ?", update.toDemoSQL());
 	}
 }

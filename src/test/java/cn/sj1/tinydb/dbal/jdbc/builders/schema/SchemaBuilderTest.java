@@ -26,7 +26,7 @@ public class SchemaBuilderTest {
         users.increments("id");
         builder.build();
 
-        verify(statement).executeUpdate(users.toSQL());
+        verify(statement).executeUpdate(users.toDemoSQL());
     }
 
     @Test
@@ -44,8 +44,8 @@ public class SchemaBuilderTest {
         usersRoles.increments("id");
         builder.build();
 
-        verify(statement).executeUpdate(users.toSQL());
-        verify(statement).executeUpdate(roles.toSQL());
-        verify(statement).executeUpdate(usersRoles.toSQL());
+        verify(statement).executeUpdate(users.toDemoSQL());
+        verify(statement).executeUpdate(roles.toDemoSQL());
+        verify(statement).executeUpdate(usersRoles.toDemoSQL());
     }
 }

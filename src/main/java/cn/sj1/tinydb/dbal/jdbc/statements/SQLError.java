@@ -26,7 +26,7 @@ public class SQLError extends RuntimeException {
         return new SQLError(
             String.format(
                 "Cannot execute statement %s with parameters %s",
-                statement.toSQL(),
+                statement.toDemoSQL(),
                 Arrays.toString(parameters)
             ),
             cause

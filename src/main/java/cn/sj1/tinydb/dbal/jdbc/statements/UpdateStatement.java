@@ -29,7 +29,7 @@ public class UpdateStatement extends SQLStatement {
     }
 
     public void execute(Object... parameters) {
-        try (PreparedStatement statement = connection.prepareStatement(update.toSQL())) {
+        try (PreparedStatement statement = connection.prepareStatement(update.toDemoSQL())) {
             QueryParameters.bind(statement, parameters);
             statement.executeUpdate();
         } catch (SQLException e) {

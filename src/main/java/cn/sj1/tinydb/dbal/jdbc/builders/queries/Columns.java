@@ -52,7 +52,7 @@ class Columns implements HasSQLRepresentation {
     }
 
     @Override
-    public String toSQL() {
+    public String toDemoSQL() {
         if (columns.isEmpty()) columns.add(ALL);
 
         return String.join(", ", columns.toArray(new String[]{}));

@@ -35,6 +35,18 @@ public class DBSchemaMerge {
 		return schemaMerge.mergeTable(conn, tableName, columnsExpected);
 	}
 
+	public static boolean mergeColumnsRight(Connection conn, String tableName, ColumnList columnsExpected) throws SQLException {
+		DatabaseMetaData metaData = conn.getMetaData();
+		schemaMerge.sqlHelper = SqlHelper.get(metaData.getDriverName(), metaData.getDriverMajorVersion(), metaData.getDriverMinorVersion());
+		return schemaMerge.mergeTableRight(conn, tableName, columnsExpected);
+	}
+
+	public boolean mergeRight(Connection conn, String tableName, ColumnList columnsExpected) throws SQLException {
+		DatabaseMetaData metaData = conn.getMetaData();
+		schemaMerge.sqlHelper = SqlHelper.get(metaData.getDriverName(), metaData.getDriverMajorVersion(), metaData.getDriverMinorVersion());
+		return schemaMerge.mergeTableRight(conn, tableName, columnsExpected);
+	}
+
 	SqlHelper sqlHelper;
 
 	public DBSchemaMerge(String driverName) {
@@ -53,12 +65,12 @@ public class DBSchemaMerge {
 			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
 			if (columnsActual.size() == 0) {
 				Statement statement = conn.createStatement();
-				createTable(statement, tableName, columnsExpected);
+				createTable(tableName, columnsExpected);
 				statement.executeBatch();
 				return false;
 			}
 
-			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual);
+			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual, true);
 			logger.info("commandBus {}", commandBus);
 			Statement statement = conn.createStatement();
 			prepareMerge(statement, tableName, commandBus);
@@ -67,25 +79,61 @@ public class DBSchemaMerge {
 		}
 		{
 			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
-			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual);
+			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual, true);
+			if(commandBus.size()>0) {
+				logger.debug("error {} {}",commandBus,columnsExpected,columnsActual);
+			}
 			assert commandBus.size() == 0;
 			return true;
 		}
 	}
 
-	void createTable(Statement statement, String tableName, ColumnList columnsExpected) throws SQLException {
+	boolean mergeTableRight(Connection conn, String tableName, ColumnList columnsExpected) throws SQLException {
+		{
+			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
+			if (columnsActual.size() == 0) {
+				String sql = createTable(tableName, columnsExpected);
+				try {
+					Statement statement = conn.createStatement();
+					statement.addBatch(sql);
+					statement.executeBatch();
+				} catch (SQLException e) {
+					logger.debug("throw exception for sql: {}", sql);
+					throw e;
+				}
+				return false;
+			}
+
+			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual, false);
+			logger.info("commandBus {}", commandBus);
+			Statement statement = conn.createStatement();
+			prepareMerge(statement, tableName, commandBus);
+			statement.executeBatch();
+			statement.close();
+		}
+		{
+			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
+			List<AlterTableColumnCommand> commandBus = compare(columnsExpected, columnsActual, false);
+			if (commandBus.size() > 0) {
+				logger.debug("{}", columnsExpected, columnsActual);
+			}
+			assert commandBus.size() == 0;
+			return true;
+		}
+	}
+
+	String createTable(String tableName, ColumnList columnsExpected) throws SQLException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE ").append(tableName).append(" (");
 		for (ColumnDefinition columnDefinition : columnsExpected) {
-			sb.append(columnDefinition.toSQL()).append(",");
+			sb.append(columnDefinition.getName()).append(" ").append(sqlHelper.toTypeSQL(columnDefinition)).append(",");
 		}
 		if (sb.charAt(sb.length() - 1) == ',') {
 			sb.setCharAt(sb.length() - 1, ')');
 		} else {
 			sb.append(')');
 		}
-
-		statement.addBatch(sb.toString());
+		return sb.toString();
 	}
 
 	void prepareMerge(Statement statement, String tableName, List<AlterTableColumnCommand> commandBus) throws SQLException {
@@ -118,7 +166,16 @@ public class DBSchemaMerge {
 //		}
 	}
 
-	List<AlterTableColumnCommand> compare(ColumnList columnsExpected, ColumnList columnsActual) throws SQLException {
+	/**
+	 * 名字没有想好，应该说实际的能够放得下expect的就可以。不需要完全相等
+	 * 
+	 * @param columnsExpected
+	 * @param columnsActual
+	 * @return
+	 * @throws SQLException
+	 */
+
+	List<AlterTableColumnCommand> compare(ColumnList columnsExpected, ColumnList columnsActual, boolean dropUnused) throws SQLException {
 
 		List<AlterTableColumnCommand> commandBus = new ArrayList<>();
 
@@ -133,7 +190,7 @@ public class DBSchemaMerge {
 				commandBus.add(new AlterTable.ChangeColumnTypeCommand(exptected));
 			} else if (actual.getAutoIncrment() != exptected.getAutoIncrment()) {
 				commandBus.add(new AlterTable.ChangeColumnTypeCommand(exptected));
-			} else if (!JDBC.ignoreSize(exptected.getDataType()) && (exptected.getColumnSize() > actual.getColumnSize() || exptected.getDecimalDigits() > actual.getDecimalDigits())) {
+			} else if (!sqlHelper.ignoreSize(exptected.getDataType()) && (exptected.getColumnSize() > actual.getColumnSize() || exptected.getDecimalDigits() > actual.getDecimalDigits())) {
 				commandBus.add(new AlterTable.ChangeColumnTypeCommand(exptected));
 			}
 
@@ -154,11 +211,13 @@ public class DBSchemaMerge {
 			}
 		}
 
-		for (ColumnDefinition actual : columnsActual) {
-			ColumnDefinition exptected = columnsExpected.get(actual.getName());
-			if (exptected == null) {
-				commandBus.add(new AlterTable.DropColumnCommand(actual));
-				continue;
+		if (dropUnused) {
+			for (ColumnDefinition actual : columnsActual) {
+				ColumnDefinition exptected = columnsExpected.get(actual.getName());
+				if (exptected == null) {
+					commandBus.add(new AlterTable.DropColumnCommand(actual));
+					continue;
+				}
 			}
 		}
 
@@ -173,6 +232,11 @@ public class DBSchemaMerge {
 			actualDataType = JDBCType.NUMERIC;
 		if (expectedDataType == JDBCType.DECIMAL)
 			expectedDataType = JDBCType.NUMERIC;
+
+		if (actualDataType == JDBCType.BOOLEAN)
+			actualDataType = JDBCType.BIT;
+		if (expectedDataType == JDBCType.BOOLEAN)
+			expectedDataType = JDBCType.BIT;
 
 		return actualDataType != expectedDataType;
 	}

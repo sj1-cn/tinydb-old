@@ -13,14 +13,14 @@ public class ForeignKeyTest {
 	@Test
 	public void it_converts_to_sql_a_foreign_key() {
 		ForeignKey key = new ForeignKey(IDENTITY("user_id")).references("id").on("users");
-		assertEquals("FOREIGN KEY (user_id) REFERENCES users(id)", key.toSQL());
+		assertEquals("FOREIGN KEY (user_id) REFERENCES users(id)", key.toDemoSQL());
 	}
 
 	@Test
 	public void it_fails_to_convert_if_no_table_is_referenced() {
 		assertThrows(IllegalStateException.class, () -> {
 			ForeignKey key = new ForeignKey(IDENTITY("user_id")).references("id");
-			key.toSQL();
+			key.toDemoSQL();
 		});
 	}
 
@@ -28,7 +28,7 @@ public class ForeignKeyTest {
 	public void it_fails_to_convert_if_no_column_is_referenced() {
 		assertThrows(IllegalStateException.class, () -> {
 			ForeignKey key = new ForeignKey(IDENTITY("user_id")).on("users");
-			key.toSQL();
+			key.toDemoSQL();
 		});
 	}
 }

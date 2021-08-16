@@ -4,5 +4,7 @@
 package cn.sj1.tinydb.dbal.jdbc.builders;
 
 public interface HasSQLRepresentation {
-    String toSQL();
+
+	@Deprecated
+	String toDemoSQL();
 }

@@ -37,7 +37,7 @@ abstract public class Table<T> {
         Object... parameters
     ) {
         try (PreparedStatement statement = connection.prepareStatement(
-            insertOrUpdate.toSQL()
+            insertOrUpdate.toDemoSQL()
         )) {
             QueryParameters.bind(statement, parameters);
             statement.execute();

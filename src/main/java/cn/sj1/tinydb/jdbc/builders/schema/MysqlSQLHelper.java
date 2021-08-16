@@ -33,7 +33,7 @@ import cn.sj1.tinydb.jdbc.builders.schema.JDBC.ColumnType;
 import cn.sj1.tinydb.jdbc.builders.schema.ddl.AlterTable;
 import cn.sj1.tinydb.jdbc.builders.schema.ddl.AlterTableColumnCommand;
 
-public class PostgresqlSQLHelper implements SqlHelper {
+public class MysqlSQLHelper implements SqlHelper {
 
 	public static EnumMap<JDBCType, ColumnType> mapJDBCType2RealColumnTypeName = new EnumMap<>(JDBCType.class);
 
@@ -49,13 +49,13 @@ public class PostgresqlSQLHelper implements SqlHelper {
 		regestJDBCType2RealColumnTypeName(DECIMAL, "DECIMAL(15,6)");// precisionInt , scaleInt
 		regestJDBCType2RealColumnTypeName(BIT, "BIT");
 		regestJDBCType2RealColumnTypeName(BOOLEAN, "BOOLEAN");
-		regestJDBCType2RealColumnTypeName(TINYINT, "TINYINT(3)");
-		regestJDBCType2RealColumnTypeName(SMALLINT, "SMALLINT(5)");
-		regestJDBCType2RealColumnTypeName(INTEGER, "INTEGER(10)");
-		regestJDBCType2RealColumnTypeName(BIGINT, "BIGINT(19)");
-		regestJDBCType2RealColumnTypeName(REAL, "REAL(7)");
-		regestJDBCType2RealColumnTypeName(FLOAT, "FLOAT(7)");// precisionInt
-		regestJDBCType2RealColumnTypeName(DOUBLE, "DOUBLE(17)");// precisionInt
+		regestJDBCType2RealColumnTypeName(TINYINT, "TINYINT");
+		regestJDBCType2RealColumnTypeName(SMALLINT, "SMALLINT");
+		regestJDBCType2RealColumnTypeName(INTEGER, "INTEGER");
+		regestJDBCType2RealColumnTypeName(BIGINT, "BIGINT");
+		regestJDBCType2RealColumnTypeName(REAL, "REAL");
+		regestJDBCType2RealColumnTypeName(FLOAT, "FLOAT");// precisionInt
+		regestJDBCType2RealColumnTypeName(DOUBLE, "DOUBLE");// precisionInt
 		regestJDBCType2RealColumnTypeName(BINARY, "BINARY");
 		regestJDBCType2RealColumnTypeName(VARBINARY, "VARBINARY");
 		regestJDBCType2RealColumnTypeName(LONGVARBINARY, "LONGVARBINARY");
@@ -71,20 +71,17 @@ public class PostgresqlSQLHelper implements SqlHelper {
 		String sql = null;
 		if (command instanceof AlterTable.ChangeColumnTypeCommand) {
 			ColumnDefinition column = command.getColumn();
-			sql = String.format("ALTER TABLE %s ALTER COLUMN %s TYPE %s", tableName, column.getName(), makeColumnType(column));
+			sql = String.format("ALTER TABLE %s MODIFY %s %s", tableName, column.getName(), makeColumnType(column));
 		} else if (command instanceof AlterTable.AddColumnCommand) {
 			ColumnDefinition column = command.getColumn();
 			sql = String.format("ALTER TABLE %s ADD COLUMN %s %s", tableName, column.getName(), this.makeColumnType(column));
 		} else if (command instanceof AlterTable.DropColumnCommand) {
 			sql = String.format("ALTER TABLE %s DROP COLUMN %s", tableName, command.getColumn().getName());
 		} else if (command instanceof AlterTable.AlterColumnNullableCommand) {
-			if (command.getColumn().getNullable() == ResultSetMetaData.columnNoNulls) {
-				sql = String.format("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL", tableName, command.getColumn().getName());
-			} else {
-				sql = String.format("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL", tableName, command.getColumn().getName());
-			}
+			String notnull = command.getColumn().getNullable() == ResultSetMetaData.columnNoNulls ? "NOT NULL" : "DEFAULT NULL";
+			sql = String.format("ALTER TABLE `%1$s` MODIFY `%2$s` %3$s %4$s", tableName, command.getColumn().getName(), makeColumnType(command.getColumn()), notnull);
 		} else if (command instanceof AlterTable.AlterColumnRemarksCommand) {
-			sql = String.format("COMMENT ON COLUMN %s.%s IS '%s';", tableName, command.getColumn().getName(), command.getColumn().getRemarks().replaceAll("'", "''"));
+			sql = String.format("ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s COMMENT '%4$s'", tableName, command.getColumn().getName(), makeColumnType(command.getColumn()), command.getColumn().getRemarks().replaceAll("'", "''"));
 		}
 		return sql;
 	}
@@ -136,6 +133,10 @@ public class PostgresqlSQLHelper implements SqlHelper {
 	public String typeDefinition(JDBCType dataType, int columnSize, int decimalDigits) {
 		String definition;
 		ColumnType columnType = mapJDBCType2RealColumnTypeName.get(dataType);
+
+		if (VARCHAR == dataType && columnSize > 16000) {
+			columnType = new ColumnType("TEXT", columnSize, decimalDigits);
+		}
 
 		if (!ignoreSize(columnType.name)) {
 			definition = columnType.name + size(columnSize, decimalDigits);

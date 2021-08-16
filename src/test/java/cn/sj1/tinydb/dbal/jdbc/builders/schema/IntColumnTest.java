@@ -17,28 +17,28 @@ public class IntColumnTest {
 
 	@Test
 	public void it_converts_to_sql_an_integer_column() {
-		assertEquals("user_id INTEGER(10)", INTEGER("user_id").toSQL());
+		assertEquals("user_id INTEGER(10)", INTEGER("user_id").toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_required_integer_column() {
-		assertEquals("user_id INTEGER(10) NOT NULL", INTEGER("user_id").required().toSQL());
+		assertEquals("user_id INTEGER(10) NOT NULL", INTEGER("user_id").required().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_an_autoincrementing_integer_column() {
-		assertEquals("user_id INTEGER(10) PRIMARY KEY AUTO_INCREMENT", INTEGER("user_id").autoIncrement().toSQL());
+		assertEquals("user_id INTEGER(10) PRIMARY KEY AUTO_INCREMENT", INTEGER("user_id").autoIncrement().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_unsigned_autoincrementing_integer_column() {
 		assertEquals("user_id INTEGER(10) PRIMARY KEY AUTO_INCREMENT",
-				INTEGER("user_id").autoIncrement().required().toSQL());
+				INTEGER("user_id").autoIncrement().required().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_unsigned_integer_column_with_a_default() {
 		assertEquals("user_id INTEGER(10) NOT NULL DEFAULT '1'",
-				INTEGER("user_id").required().defaultValue("1").toSQL());
+				INTEGER("user_id").required().defaultValue("1").toDemoSQL());
 	}
 }

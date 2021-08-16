@@ -10,28 +10,28 @@ import org.junit.jupiter.api.Test;
 public class StringColumnTest {
 	@Test
 	public void it_converts_to_sql_a_string_column_with_a_default_length() {
-		assertEquals("username VARCHAR(256)", VARCHAR("username").toSQL());
+		assertEquals("username VARCHAR(256)", VARCHAR("username").toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_string_column_with_a_specific_length() {
-		assertEquals("username VARCHAR(300)", VARCHAR("username").size(300).toSQL());
+		assertEquals("username VARCHAR(300)", VARCHAR("username").size(300).toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_string_column() {
-		assertEquals("username VARCHAR(256) NOT NULL", VARCHAR("username").required().toSQL());
+		assertEquals("username VARCHAR(256) NOT NULL", VARCHAR("username").required().toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_string_column_with_a_default_value() {
 		assertEquals("favorite_language VARCHAR(256) DEFAULT 'Java'",
-				VARCHAR("favorite_language").defaultValue("Java").toSQL());
+				VARCHAR("favorite_language").defaultValue("Java").toDemoSQL());
 	}
 
 	@Test
 	public void it_converts_to_sql_a_required_string_column_with_specific_length_and_default_value() {
 		assertEquals("favorite_language VARCHAR(300) NOT NULL DEFAULT 'Java'",
-				VARCHAR("favorite_language").size(300).required().defaultValue("Java").toSQL());
+				VARCHAR("favorite_language").size(300).required().defaultValue("Java").toDemoSQL());
 	}
 }

@@ -25,7 +25,7 @@ class PrimaryKey implements HasSQLRepresentation {
     }
 
     @Override
-    public String toSQL() {
+    public String toDemoSQL() {
         return String.format("PRIMARY KEY (%s)", columnNames());
     }
 

@@ -44,7 +44,7 @@ public class Table implements HasSQLRepresentation {
 	public ColumnDefinition increments(String name) {
 		ColumnDefinition id = INTEGER(name)
 			.autoIncrement()
-			._unsigned()
+			.unsigned()
 			.required();
 		primaryKey = new PrimaryKey(id);
 		columns.add(id);
@@ -68,7 +68,7 @@ public class Table implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		assertPrimaryKeyIsPresent();
 
         return String.format(
@@ -76,7 +76,7 @@ public class Table implements HasSQLRepresentation {
             ifNotExistsSQL(),
             name,
             columnDefinitions(),
-            primaryKey.toSQL(),
+            primaryKey.toDemoSQL(),
             foreignKeysSQL()
         ).replaceAll("( )+", " ");
 	}
@@ -94,7 +94,7 @@ public class Table implements HasSQLRepresentation {
 	private String foreignKeysSQL() {
 		StringBuilder sql = new StringBuilder();
         foreignKeys.forEach(
-            foreignKey -> sql.append(", ").append(foreignKey.toSQL())
+            foreignKey -> sql.append(", ").append(foreignKey.toDemoSQL())
         );
 		return sql.toString();
 	}
@@ -102,7 +102,7 @@ public class Table implements HasSQLRepresentation {
 	private String columnDefinitions() {
 		StringBuilder definition = new StringBuilder();
         columns.forEach(
-            column -> definition.append(column.toSQL()).append(", ")
+            column -> definition.append(column.toDemoSQL()).append(", ")
         );
 		return definition.toString().trim();
 	}

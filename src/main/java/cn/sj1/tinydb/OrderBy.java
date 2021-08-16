@@ -40,7 +40,7 @@ public class OrderBy implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		if (orderbys.size() > 0) {
 			List<String> str = new ArrayList<>();
 			for (OrderByItem o : orderbys) {
@@ -54,7 +54,7 @@ public class OrderBy implements HasSQLRepresentation {
 
 	@Override
 	public String toString() {
-		return toSQL();
+		return toDemoSQL();
 	}
 
 }

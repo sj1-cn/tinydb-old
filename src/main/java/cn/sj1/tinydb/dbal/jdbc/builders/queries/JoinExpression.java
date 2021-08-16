@@ -18,7 +18,7 @@ class JoinExpression implements HasSQLRepresentation {
         this.type = type;
     }
 
-    public String toSQL() {
+    public String toDemoSQL() {
         return String.format(
             "%s JOIN %s ON %s",
             type.toString(),

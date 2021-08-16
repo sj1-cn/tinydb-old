@@ -21,7 +21,7 @@ class WhereExpression implements HasSQLRepresentation {
     }
 
     @Override
-    public String toSQL() {
+    public String toDemoSQL() {
         return operator() + expression;
     }
 

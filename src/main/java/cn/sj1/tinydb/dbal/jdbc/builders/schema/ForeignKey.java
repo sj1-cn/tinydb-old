@@ -25,7 +25,7 @@ public class ForeignKey implements HasSQLRepresentation {
     }
 
     @Override
-    public String toSQL() {
+    public String toDemoSQL() {
         assertReferenceIsSet();
         return String.format(
             "FOREIGN KEY (%s) REFERENCES %s(%s)",

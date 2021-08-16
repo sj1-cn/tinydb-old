@@ -44,7 +44,7 @@ class Rows implements HasSQLRepresentation {
 	}
 
 	@Override
-	public String toSQL() {
+	public String toDemoSQL() {
 		return String.format("%s %s", limitToSQL(), offsetToSQL()).trim();
 	}
 

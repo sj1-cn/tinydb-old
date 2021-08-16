@@ -26,6 +26,6 @@ public class SchemaBuilder {
 
     public void build() throws SQLException {
         Statement statement = connection.createStatement();
-        for (Table table : tables)  statement.executeUpdate(table.toSQL());
+        for (Table table : tables)  statement.executeUpdate(table.toDemoSQL());
     }
 }

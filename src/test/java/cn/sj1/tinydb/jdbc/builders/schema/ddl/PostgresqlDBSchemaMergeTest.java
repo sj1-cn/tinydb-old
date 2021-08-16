@@ -2,7 +2,7 @@ package cn.sj1.tinydb.jdbc.builders.schema.ddl;
 
 import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.BIGINT;
 import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.CHAR;
-import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.DECIMAL;
+import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.*;
 import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.IDENTITY;
 import static cn.sj1.tinydb.jdbc.builders.schema.ColumnDefinition.VARCHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,7 +69,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 			List<String> ls = new ArrayList<>();
 			List<String> keys = new ArrayList<>();
 			for (ColumnDefinition columnDefinition : columnsPrepared) {
-				ls.add(columnDefinition.toSQL());
+				ls.add(columnDefinition.toDemoSQL());
 				if (columnDefinition.isPrimarykey()) {
 					keys.add(columnDefinition.getColumnName());
 				}
@@ -100,7 +100,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(0, commandBus.size());
 	}
@@ -117,7 +117,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertTrue(commandBus.get(0) instanceof AlterTable.AddColumnCommand);
@@ -183,24 +183,35 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 	@Test
 	public void test_merge_addColumn_exec() throws SQLException {
+
+//		matchColumnChange(VARCHAR("favor").size(1024));
+		String name = "favor";
+//		matchColumnChange(INTEGER(name), name);
+
+		matchColumnChange(BOOLEAN(name), name);
+//		matchColumnChange(BIGINT("favor"));
+//		matchColumnChange(VARCHAR("favor"));
+	}
+
+	private void matchColumnChange(ColumnDefinition columnTarget, String name) throws SQLException {
 		ColumnList columnsExpected = columnsPrepared.copy();
-		columnsExpected.push(VARCHAR("favor").size(1024));
+		columnsExpected.push(columnTarget);
 
 		{
 			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
-			assertNull(columnsActual.get("favor"));
+			assertNull(columnsActual.get(name));
 		}
 
 		dbSchemaMerge.merge(conn, tableName, columnsExpected);
 
 		{
 			ColumnList columnsActual = JdbcDababaseMetadata.getColumns(conn, tableName);
-			assertEquals(columnsActual.get("favor").toString(), columnsActual.get("favor").toString());
+			assertEquals(columnsActual.get(name).toString(), columnsActual.get(name).toString());
 		}
 	}
 
 	@Test
-	public void test_merge_alterColumn_change_type_exec() throws SQLException {
+	public void test_merge_alterColumn_change_type_exec_BIGINT() throws SQLException {
 		ColumnList columnsExpected = columnsPrepared.copy();
 		columnsExpected.push(BIGINT("height"));
 
@@ -485,7 +496,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertTrue(commandBus.get(0) instanceof AlterTable.ChangeColumnTypeCommand);
@@ -504,7 +515,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertTrue(commandBus.get(0) instanceof AlterTable.ChangeColumnTypeCommand);
@@ -523,7 +534,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertTrue(commandBus.get(0) instanceof AlterTable.ChangeColumnTypeCommand);
@@ -543,7 +554,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertTrue(commandBus.get(0) instanceof AlterTable.AlterColumnRemarksCommand);
@@ -563,7 +574,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertEquals("AlterColumnNullableCommand [name VARCHAR(256) NOT NULL]", commandBus.get(0).toString());
@@ -580,7 +591,7 @@ public class PostgresqlDBSchemaMergeTest extends TestBase {
 
 		ColumnList actual = JdbcDababaseMetadata.getColumns(conn, tableName);
 
-		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual);
+		List<AlterTableColumnCommand> commandBus = dbSchemaMerge.compare(columnsExpected, actual,true);
 
 		assertEquals(1, commandBus.size());
 		assertEquals("DropColumnCommand [name VARCHAR(256)]", commandBus.get(0).toString());

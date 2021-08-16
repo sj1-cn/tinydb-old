@@ -34,9 +34,9 @@ class Join implements HasSQLRepresentation {
         return joins.isEmpty();
     }
 
-    public String toSQL() {
+    public String toDemoSQL() {
         StringBuilder joinClauses = new StringBuilder();
-        joins.forEach(join -> joinClauses.append(join.toSQL()).append(" "));
+        joins.forEach(join -> joinClauses.append(join.toDemoSQL()).append(" "));
         return joinClauses.toString().replaceAll(" $", "");
     }
 }
