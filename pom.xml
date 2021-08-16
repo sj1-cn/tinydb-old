@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.sj1</groupId>
-	<artifactId>tiny-db</artifactId>
+	<artifactId>tinydb</artifactId>
 	<name>tiny-db</name>
-	<description>tiny-db</description>
-	<version>0.0.1-SNAPSHOT</version>
-	<inceptionYear>2020</inceptionYear>
-	<url>http://www.snakeyaml.org</url>
+	<description>tinydb</description>
+	<version>0.0.1</version>
+	<inceptionYear>2021</inceptionYear>
+	<url>http://sj1.cn</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.scm.id>bitbucket</project.scm.id>
